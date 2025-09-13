@@ -1,7 +1,8 @@
 <?php
 
-namespace Laravel\Installer\Console\Concerns;
+namespace Modularavel\Installer\Console\Concerns;
 
+use JsonException;
 use Symfony\Component\Process\Exception\ProcessStartFailedException;
 use Symfony\Component\Process\Process;
 
@@ -10,25 +11,26 @@ trait InteractsWithHerdOrValet
     /**
      * Determine if the given directory is parked using Herd or Valet.
      *
-     * @param  string  $directory
+     * @param string $directory
      * @return bool
+     * @throws JsonException
      */
-    public function isParkedOnHerdOrValet(string $directory)
+    public function isParkedOnHerdOrValet(string $directory): bool
     {
         $output = $this->runOnValetOrHerd('paths');
 
-        $decodedOutput = json_decode($output);
+        $decodedOutput = json_decode($output, false, 512, JSON_THROW_ON_ERROR);
 
-        return is_array($decodedOutput) && in_array(dirname($directory), $decodedOutput);
+        return is_array($decodedOutput) && in_array(dirname($directory), $decodedOutput, true);
     }
 
     /**
      * Runs the given command on the "herd" or "valet" CLI.
      *
      * @param  string  $command
-     * @return string|false
+     * @return string|bool
      */
-    protected function runOnValetOrHerd(string $command)
+    protected function runOnValetOrHerd(string $command): bool|string
     {
         foreach (['herd', 'valet'] as $tool) {
             $process = new Process([$tool, $command, '-v']);

@@ -1,14 +1,19 @@
 {
-    "name": "laravel/installer",
-    "description": "Laravel application installer.",
+    "name": "modularavel/installer",
+    "description": "Start a new project in Laravel quickly, objectively, and simply without having to wait step by step to confirm or deny questions during the installation! Here you can define everything and leave it installing; when you get back from having a coffee, the project will already be running :)",
     "keywords": [
-        "laravel"
+        "laravel",
+        "modularavel",
+        "starterkit",
+        "laravel modules",
+        "modular",
+        "modularity"
     ],
     "license": "MIT",
     "authors": [
         {
-            "name": "Taylor Otwell",
-            "email": "taylor@laravel.com"
+            "name": "Casimiro Rocha",
+            "email": "contato@crsistemas.dev.br"
         }
     ],
     "require": {
@@ -21,20 +26,21 @@
         "symfony/polyfill-mbstring": "^1.31"
     },
     "require-dev": {
+        "roave/security-advisories": "dev-latest",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^10.4"
     },
     "bin": [
-        "bin/laravel"
+        "bin/modularavel"
     ],
     "autoload": {
         "psr-4": {
-            "Laravel\\Installer\\Console\\": "src/"
+            "Modularavel\\Installer\\Console\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Laravel\\Installer\\Console\\Tests\\": "tests/"
+            "Modularavel\\Installer\\Console\\Tests\\": "tests/"
         }
     },
     "config": {

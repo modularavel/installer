@@ -1,9 +1,10 @@
 <?php
 
-namespace Laravel\Installer\Console\Tests;
+namespace Modularavel\Installer\Console\Tests;
 
-use Laravel\Installer\Console\Concerns\InteractsWithHerdOrValet;
-use Laravel\Installer\Console\NewCommand;
+use JsonException;
+use Modularavel\Installer\Console\Concerns\InteractsWithHerdOrValet;
+use Modularavel\Installer\Console\NewCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -14,7 +15,8 @@ class NewCommandTest extends TestCase
 
     public function test_it_can_scaffold_a_new_laravel_app()
     {
-        $scaffoldDirectoryName = 'tests-output/my-app';
+        $scaffoldDirectoryName = 'tests-output/new-modularavel-app';
+
         $scaffoldDirectory = __DIR__.'/../'.$scaffoldDirectoryName;
 
         if (file_exists($scaffoldDirectory)) {
@@ -25,7 +27,8 @@ class NewCommandTest extends TestCase
             }
         }
 
-        $app = new Application('Laravel Installer');
+        $app = new Application('Modularavel Installer');
+
         $app->add(new NewCommand);
 
         $tester = new CommandTester($app->find('new'));
@@ -33,10 +36,15 @@ class NewCommandTest extends TestCase
         $statusCode = $tester->execute(['name' => $scaffoldDirectoryName], ['interactive' => false]);
 
         $this->assertSame(0, $statusCode);
+
         $this->assertDirectoryExists($scaffoldDirectory.'/vendor');
+
         $this->assertFileExists($scaffoldDirectory.'/.env');
     }
 
+    /**
+     * @throws JsonException
+     */
     public function test_it_can_chop_trailing_slash_from_name()
     {
         if ($this->runOnValetOrHerd('paths') === false) {
@@ -44,6 +52,7 @@ class NewCommandTest extends TestCase
         }
 
         $scaffoldDirectoryName = 'tests-output/trailing/';
+
         $scaffoldDirectory = __DIR__.'/../'.$scaffoldDirectoryName;
 
         if (file_exists($scaffoldDirectory)) {
@@ -54,12 +63,13 @@ class NewCommandTest extends TestCase
             }
         }
 
-        $app = new Application('Laravel Installer');
+        $app = new Application('Modularavel Installer');
+
         $app->add(new NewCommand);
 
         $tester = new CommandTester($app->find('new'));
 
-        $statusCode = $tester->execute(['name' => $scaffoldDirectoryName], ['interactive' => false]);
+        $statusCode = $tester->execute(['name' => $scaffoldDirectoryName], ['interactive' => true]);
 
         $this->assertSame(0, $statusCode);
         $this->assertDirectoryExists($scaffoldDirectory.'/vendor');
@@ -73,6 +83,9 @@ class NewCommandTest extends TestCase
         }
     }
 
+    /**
+     * @throws JsonException
+     */
     public function test_on_at_least_laravel_11()
     {
         $command = new NewCommand;

@@ -1,7 +1,8 @@
 <?php
 
-namespace Laravel\Installer\Console\Concerns;
+namespace Modularavel\Installer\Console\Concerns;
 
+use Closure;
 use Laravel\Prompts\ConfirmPrompt;
 use Laravel\Prompts\MultiSelectPrompt;
 use Laravel\Prompts\PasswordPrompt;
@@ -19,8 +20,8 @@ trait ConfiguresPrompts
     /**
      * Configure the prompt fallbacks.
      *
-     * @param  \Symfony\Component\Console\Input\InputInterface  $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function configurePrompts(InputInterface $input, OutputInterface $output)
@@ -99,13 +100,13 @@ trait ConfiguresPrompts
     /**
      * Prompt the user until the given validation callback passes.
      *
-     * @param  \Closure  $prompt
-     * @param  bool|string  $required
-     * @param  \Closure|null  $validate
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
+     * @param Closure $prompt
+     * @param bool|string $required
+     * @param Closure|null $validate
+     * @param OutputInterface|null $output
      * @return mixed
      */
-    protected function promptUntilValid($prompt, $required, $validate, $output)
+    protected function promptUntilValid(Closure $prompt, bool|string $required, ?Closure $validate, ?OutputInterface $output)
     {
         while (true) {
             $result = $prompt();
@@ -119,7 +120,7 @@ trait ConfiguresPrompts
             if ($validate) {
                 $error = $validate($result);
 
-                if (is_string($error) && strlen($error) > 0) {
+                if (is_string($error) && $error !== '') {
                     $output->writeln("<error>{$error}</error>");
 
                     continue;
